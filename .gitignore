@@ -1,0 +1,22 @@
+# Apple proprietary donor files - NEVER COMMIT
+/vendor/*
+!/vendor/README.md
+
+# Generated output
+/build/
+/generated/
+/reverse-engineering/manifests/*.json
+/reverse-engineering/manifests/*.txt
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdata/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# macOS
+.DS_Store
+._*
