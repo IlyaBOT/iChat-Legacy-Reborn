@@ -1,0 +1,10 @@
+{
+  "/System/Library/PrivateFrameworks/IMCore.framework": "@rpath/IMCore.framework",
+  "/System/Library/Frameworks/InstantMessage.framework": "@rpath/InstantMessage.framework",
+  "/System/Library/PrivateFrameworks/IMAVCore.framework": "@rpath/IMAVCore.framework",
+  "/System/Library/Frameworks/IMServicePlugIn.framework": "@rpath/IMServicePlugIn.framework",
+  "/System/Library/PrivateFrameworks/XMPPCore.framework": "@rpath/XMPPCore.framework",
+  "/System/Library/PrivateFrameworks/PhoneNumbers.framework": "@rpath/PhoneNumbers.framework",
+  "/System/Library/PrivateFrameworks/FTServices.framework": "@rpath/FTServices.framework",
+  "/System/Library/PrivateFrameworks/Marco.framework": "@rpath/Marco.framework"
+}
