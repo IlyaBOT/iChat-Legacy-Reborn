@@ -261,3 +261,15 @@ Snow Leopard `WebKit.framework` contains an `LC_REEXPORT_DYLIB` entry for its ne
 These classes are physically exported by Snow `WebCore.framework` and made available through the WebKit re-export. Therefore the earlier `MISSING=3` result was a false positive caused by checking only the umbrella WebKit binary's physical exports.
 
 Conclusion: keep Snow WebKit/WebCore; do not bundle Lion WebKit for Milestone 1.
+
+
+## AddressBook compatibility wrapper confirmed
+
+The Lion messaging-island AddressBook dependency surface contains 40 unique imported symbols. Snow Leopard AddressBook plus `AddressBookCompat.dylib` satisfies all of them:
+
+- required: 40
+- missing: 0
+
+`AddressBookCompat` re-exports Snow Leopard AddressBook and adds the 13 Lion-era instant-message constants using values extracted directly from Lion AddressBook 1090 CFString objects.
+
+This confirms that Lion AddressBook itself does not need to be bundled for Milestone 1.
