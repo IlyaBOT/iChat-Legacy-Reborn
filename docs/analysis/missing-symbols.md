@@ -119,3 +119,43 @@ The bring-up has passed the initial missing-image stage for the following compon
 The real Lion AV dependency chain (`IMAVCore -> Marco/FTServices -> IMFoundation 800 -> IMCore 800/Security Transforms`) is not used for Milestone 1; `IMAVCoreCompat` replaces that surface.
 
 Native Snow Leopard frameworks are still preferred where their ABI is sufficient, but the direct iChat 6 -> IMCore gap is large enough that Lion IMCore 800 must now be evaluated explicitly.
+
+
+## Lion IMCore 800 as a replacement for Snow IMCore 701
+
+Testing whether Lion IMCore 800 could serve as the single IMCore implementation for both Lion iChat and Snow Leopard's existing messaging frameworks showed that the mixed stack is not ABI-compatible.
+
+### Snow InstantMessage -> Lion IMCore 800
+
+Snow Leopard `InstantMessage.framework` imports 21 symbols from IMCore. Lion IMCore 800 provides 19 of them, but is missing two exported ivar-offset symbols:
+
+- `_OBJC_IVAR_$_IMAccount._iconChecked`
+- `_OBJC_IVAR_$_IMAccount._subtypeInfo`
+
+Because these are ivar offsets, this is an object-layout incompatibility rather than a simple missing helper function.
+
+### Snow IMRenderingFoundation -> Lion IMCore 800
+
+Snow Leopard `IMRenderingFoundation.framework` imports 44 symbols from IMCore. Lion IMCore 800 is missing **43** of them. The missing surface includes attributed-string parser classes, rendering attributes, geometry/path helpers, logging helpers and ivar-offset symbols.
+
+Therefore Snow `InstantMessage` / `IMRenderingFoundation` cannot safely be redirected to Lion IMCore 800. A viable Lion IMCore path requires moving the dependent messaging frameworks as a coherent Lion stack instead of mixing them with Snow implementations.
+
+### Lion IMCore 800 vs Snow system frameworks
+
+A direct import/export comparison of Lion IMCore 800 against Snow Leopard system frameworks found:
+
+- Foundation: 27 imports, **0 missing**
+- CoreFoundation: 34 imports, **0 missing**
+- AddressBook: 40 imports, **13 missing**
+- Security: no direct imports requiring additional work in this comparison
+- PhoneNumbers.framework: absent on Snow Leopard; Lion IMCore imports only 3 functions from it
+
+The 13 missing AddressBook symbols are instant-messaging constants such as `kABInstantMessageProperty`, service identifiers (AIM, Facebook, GoogleTalk, Jabber, Skype, Yahoo, etc.) and `kABInstantMessageUsernameKey`.
+
+The three PhoneNumbers imports are:
+
+- `_CFPhoneNumberCreate`
+- `_CFPhoneNumberCopyUnformattedRepresentation`
+- `_CFPhoneNumberCopyUnformattedInternationalRepresentation`
+
+This suggests that the lower Snow runtime is comparatively close to what Lion IMCore needs, and that the next experiment should evaluate a coherent Lion messaging island (`IMCore + IMFoundation + InstantMessage + IMRenderingFoundation`) with narrow compatibility shims for AddressBook and PhoneNumbers rather than forcing Lion IMCore under Snow messaging frameworks.
