@@ -248,3 +248,16 @@ The potentially real WebKit-specific observations from this pass are:
 The potentially real AddressBook-specific observations include Lion-only classes/constants in Foundation, AppKit, OpenDirectory, QuartzCore, SecurityFoundation and InternetAccounts, but this path is currently less attractive than a narrow AddressBook compatibility wrapper because the messaging island itself needs only 13 Lion instant-message AddressBook constants.
 
 Before deciding on Lion WebKit, umbrella-framework re-exports and the physical location/runtime availability of `DOMCSSMediaRule`, `DOMDocument` and `DOMElement` on Snow Leopard must be measured directly.
+
+
+## Snow WebKit re-export resolves the DOM-class gap
+
+Snow Leopard `WebKit.framework` contains an `LC_REEXPORT_DYLIB` entry for its nested `WebCore.framework`. Inspecting the combined Snow WebKit + WebCore export surface showed that all three DOM classes required by Lion IMRenderingFoundation are present:
+
+- `_OBJC_CLASS_$_DOMCSSMediaRule`
+- `_OBJC_CLASS_$_DOMDocument`
+- `_OBJC_CLASS_$_DOMElement`
+
+These classes are physically exported by Snow `WebCore.framework` and made available through the WebKit re-export. Therefore the earlier `MISSING=3` result was a false positive caused by checking only the umbrella WebKit binary's physical exports.
+
+Conclusion: keep Snow WebKit/WebCore; do not bundle Lion WebKit for Milestone 1.
