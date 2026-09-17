@@ -159,3 +159,10 @@ The three PhoneNumbers imports are:
 - `_CFPhoneNumberCopyUnformattedInternationalRepresentation`
 
 This suggests that the lower Snow runtime is comparatively close to what Lion IMCore needs, and that the next experiment should evaluate a coherent Lion messaging island (`IMCore + IMFoundation + InstantMessage + IMRenderingFoundation`) with narrow compatibility shims for AddressBook and PhoneNumbers rather than forcing Lion IMCore under Snow messaging frameworks.
+
+
+### Re-export caveat for Lion IMCore analysis
+
+A first physical-export-only comparison of Lion `InstantMessage.framework` / `IMRenderingFoundation.framework` against the Lion IMCore binary reported apparent missing IMCore symbols (11 and 46 respectively). Many of those symbols are known Lion IMFoundation APIs (for example remote-object classes, attributed-string parsers and IM logging helpers), so these counts must not yet be treated as an ABI failure. Lion IMCore may expose part of its public surface by re-exporting its nested IMFoundation framework. The next comparison therefore needs to inspect `LC_REEXPORT_DYLIB` and compare clients against the combined IMCore + IMFoundation export surface.
+
+Also, the current patched iChat executable no longer reports direct imports as `(from IMRenderingFoundation)` because that dependency was already rewritten to `IMRenderingFoundationCompat.dylib`; the previously measured original direct surface remains 36 imports.
