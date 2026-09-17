@@ -218,3 +218,33 @@ Lion `PhoneNumbers.framework` is present in the extracted Lion system and its me
 - libSystem: 24 imports, **0 missing**
 
 Therefore PhoneNumbers can likely be bundled intact, while WebKit and DataDetectorsCore should be evaluated as local Lion candidates before writing compatibility shims.
+
+
+## Boundary experiment: local Lion WebKit / DataDetectorsCore / AddressBook
+
+A dependency probe of the Lion boundary frameworks produced two different classes of result.
+
+### DataDetectorsCore
+
+Lion `DataDetectorsCore.framework` is a strong local-bundling candidate. Against Snow Leopard, the measured direct dependency surface had no missing symbols:
+
+- Foundation: 23 imports, 0 missing
+- CoreFoundation: 197 imports, 0 missing
+- libcrypto/libicucore/libxml2/libstdc++/libSystem/libobjc: no measured gaps
+
+This is preferable to stubbing the three newer DataDetectorsCore functions.
+
+### WebKit and AddressBook
+
+The first raw comparison reported very large gaps for umbrella frameworks such as Carbon, CoreServices and ApplicationServices. These counts are not yet trustworthy because the test compared against only the physical exports of the umbrella binary and did not include `LC_REEXPORT_DYLIB` closure. The same issue previously produced false ABI gaps for IMCore before IMFoundation re-exports were included.
+
+The potentially real WebKit-specific observations from this pass are:
+
+- Snow JavaScriptCore satisfies 125/125 measured Lion WebKit imports.
+- Snow WebCore misses 10 measured Lion WebKit imports.
+- Snow Foundation misses `NSFileWrapper`.
+- Snow AppKit misses `__NSRecommendedScrollerStyle`.
+
+The potentially real AddressBook-specific observations include Lion-only classes/constants in Foundation, AppKit, OpenDirectory, QuartzCore, SecurityFoundation and InternetAccounts, but this path is currently less attractive than a narrow AddressBook compatibility wrapper because the messaging island itself needs only 13 Lion instant-message AddressBook constants.
+
+Before deciding on Lion WebKit, umbrella-framework re-exports and the physical location/runtime availability of `DOMCSSMediaRule`, `DOMDocument` and `DOMElement` on Snow Leopard must be measured directly.
