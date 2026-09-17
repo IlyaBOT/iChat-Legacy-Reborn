@@ -166,3 +166,21 @@ This suggests that the lower Snow runtime is comparatively close to what Lion IM
 A first physical-export-only comparison of Lion `InstantMessage.framework` / `IMRenderingFoundation.framework` against the Lion IMCore binary reported apparent missing IMCore symbols (11 and 46 respectively). Many of those symbols are known Lion IMFoundation APIs (for example remote-object classes, attributed-string parsers and IM logging helpers), so these counts must not yet be treated as an ABI failure. Lion IMCore may expose part of its public surface by re-exporting its nested IMFoundation framework. The next comparison therefore needs to inspect `LC_REEXPORT_DYLIB` and compare clients against the combined IMCore + IMFoundation export surface.
 
 Also, the current patched iChat executable no longer reports direct imports as `(from IMRenderingFoundation)` because that dependency was already rewritten to `IMRenderingFoundationCompat.dylib`; the previously measured original direct surface remains 36 imports.
+
+
+## Coherent Lion messaging island confirmed
+
+Inspecting Lion IMCore 800 load commands showed an `LC_REEXPORT_DYLIB` entry for its nested `IMFoundation.framework`. Re-running the ABI comparison against the **combined IMCore + IMFoundation export surface** eliminated the apparent gaps:
+
+- Lion `InstantMessage.framework` -> Lion `IMCore + IMFoundation`: 23 imports, **0 missing**
+- Lion `IMRenderingFoundation.framework` -> Lion `IMCore + IMFoundation`: 59 imports, **0 missing**
+- Lion IMCore -> Lion IMFoundation: 157 imports, **0 missing**
+
+This confirms that the correct internal stack is a coherent Lion messaging island rather than a mixed Snow/Lion stack:
+
+- Lion IMCore 800
+- Lion IMFoundation 800 (re-exported by IMCore)
+- Lion InstantMessage 800
+- Lion IMRenderingFoundation 800
+
+The next compatibility work should therefore focus on the island's boundary with Snow Leopard system frameworks (AddressBook, AppKit, WebKit, DataDetectors, Symbolication, PhoneNumbers, etc.), not on fabricating internal IMCore symbols.
