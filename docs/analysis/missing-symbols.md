@@ -54,6 +54,24 @@ Snow Leopard exports the older related API:
 
 `project/LegacySupportShim/SecurityCompat.c` implements a narrow compatibility layer for these four observed imports and delegates to the Snow Leopard Security API where possible.
 
+## Lion FTServices vs Snow Leopard Security.framework
+
+After the IMFoundation Security gap was bridged, dyld reported `_kSecDigestSHA1` from Lion `FTServices.framework`. A full import/export comparison showed eleven Lion Security Transforms symbols absent from Snow Leopard:
+
+- `_SecSignTransformCreate`
+- `_SecTransformExecute`
+- `_SecTransformSetAttribute`
+- `_SecVerifyTransformCreate`
+- `_kSecDigestSHA1`
+- `_kSecDigestTypeAttribute`
+- `_kSecInputIsAttributeName`
+- `_kSecInputIsDigest`
+- `_kSecKeyAttributeName`
+- `_kSecSignatureAttributeName`
+- `_kSecTransformInputAttributeName`
+
+For Milestone 1 (launch the iChat 6 GUI), `SecurityCompat.c` exports these symbols as explicitly launch-only stubs. They satisfy dyld but do **not** provide real signing or signature verification. Functional Security Transforms support is deferred until it is proven necessary beyond application startup.
+
 ## Loader progress at this point
 
 The bring-up has already passed the initial missing-image stage for the following Lion components bundled locally with the test iChat application:
