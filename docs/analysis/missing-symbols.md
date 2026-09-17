@@ -89,16 +89,33 @@ The iChat 6 executable directly imports **46 symbols** from IMAVCore. The direct
 
 Snow Leopard IMCore and InstantMessage contain some older IMAV chat keys but do not export the required Lion AV classes or VC symbols. The compatibility implementation therefore needs to reproduce the observed Lion Objective-C ABI (superclasses, instance sizes, ivar order/offsets, class/metaclass exports) sufficiently for iChat 6 to reach the GUI without enabling AV functionality.
 
+## iChat 6 executable vs Snow Leopard IMCore 701
+
+After the AV, InternetAccounts and IMRenderingFoundation gaps were bridged, dyld reached the iChat 6 executable's direct IMCore dependency and failed on `_ABIMHandlesChangedNotification`.
+
+A complete direct import/export comparison found **187 IMCore imports from iChat 6, of which 153 are absent from Snow Leopard IMCore 701**. This is not a narrow compatibility surface. The missing set includes central Lion messaging classes and infrastructure such as:
+
+- `IMChat`, `IMChatRegistry`, `IMFileTransfer`;
+- `IMMessageChatItem`, `IMDatestampChatItem`, `IMHeaderChatItem`, `IMTimestampChatItem`;
+- `IMLocalObject`, `IMRemoteObject`, `IMRemoteObjectBroadcaster`;
+- `IMDirectlyObservableObject`, `IMSystemMonitor`, `IMAddressBook`, `IMFileManager`;
+- many account/chat/handle notifications and property keys;
+- keychain, logging, plugin-path, temporary-path and service helper functions.
+
+Because iChat directly relies on a large portion of the Lion IMCore object model, a Snow-IMCore re-export shim with 153 fabricated symbols is considered unsafe and unsuitable. The next experiment is to treat **Lion IMCore 800 as the candidate primary IMCore for the iChat 6 process**, then measure its dependencies against Snow Leopard and identify duplicate-class conflicts with native Snow frameworks before deciding whether a mixed Lion/Snow stack is viable.
+
 ## Loader progress at this point
 
-The bring-up has already passed the initial missing-image stage for the following Lion components bundled locally with the test iChat application:
+The bring-up has passed the initial missing-image stage for the following components and compatibility layers:
 
 - `IMServicePlugIn.framework` / `IMServicePlugInSupport.framework`
 - `CoreMedia.framework`
 - `AppleSystemInfo.framework`
-- `InternetAccounts.framework`
 - `libDiagnosticMessagesClient.dylib`
+- `IMAVCoreCompat`
+- `InternetAccountsCompat`
+- `IMRenderingFoundationCompat`
 
-The real Lion AV dependency chain (`IMAVCore -> Marco/FTServices -> IMFoundation 800 -> IMCore 800/Security Transforms`) is now considered unsuitable for Milestone 1 and is being replaced by `IMAVCoreCompat`.
+The real Lion AV dependency chain (`IMAVCore -> Marco/FTServices -> IMFoundation 800 -> IMCore 800/Security Transforms`) is not used for Milestone 1; `IMAVCoreCompat` replaces that surface.
 
-Native Snow Leopard frameworks are still preferred wherever their ABI is sufficient.
+Native Snow Leopard frameworks are still preferred where their ABI is sufficient, but the direct iChat 6 -> IMCore gap is large enough that Lion IMCore 800 must now be evaluated explicitly.
