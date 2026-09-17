@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+#include <stdio.h>
 
 /*
  * Launch-only IMAVCore compatibility shim for iChat 6.0.2 on Mac OS X 10.6.8.
@@ -140,7 +141,6 @@ NSString *NSStringDescriptionForIMAVChatParticipantState(NSInteger state)
     signed char _keepCameraRunning;            /* 16 */
 }
 + (id)sharedInstance;
-+ (id)alloc;
 - (id)delegate;
 - (void)setDelegate:(id)delegate;
 - (BOOL)isAVInterfaceReady;
@@ -150,7 +150,6 @@ NSString *NSStringDescriptionForIMAVChatParticipantState(NSInteger state)
 
 @implementation IMAVInterface
 + (id)sharedInstance { return nil; }
-+ (id)alloc { return [super alloc]; }
 - (id)delegate { return _delegate; }
 - (void)setDelegate:(id)delegate { _delegate = delegate; }
 - (BOOL)isAVInterfaceReady { return NO; }
