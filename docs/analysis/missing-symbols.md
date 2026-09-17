@@ -184,3 +184,37 @@ This confirms that the correct internal stack is a coherent Lion messaging islan
 - Lion IMRenderingFoundation 800
 
 The next compatibility work should therefore focus on the island's boundary with Snow Leopard system frameworks (AddressBook, AppKit, WebKit, DataDetectors, Symbolication, PhoneNumbers, etc.), not on fabricating internal IMCore symbols.
+
+
+## Lion messaging-island boundary vs Snow Leopard
+
+A combined boundary comparison for Lion `IMCore + IMFoundation + InstantMessage + IMRenderingFoundation` against Snow Leopard system frameworks produced the following results:
+
+- AddressBook: 40 imports, **13 missing**
+- AppKit: 40 imports, **0 missing**
+- WebKit: 4 imports, **3 missing**
+- Symbolication: 0 imports in this measured surface, **0 missing**
+- DataDetectors: 4 imports, **0 missing**
+- DataDetectorsCore: 14 imports, **3 missing**
+
+The 13 AddressBook gaps are all instant-message constants (`kABInstantMessageProperty`, service identifiers, service/username keys), which makes a narrow re-export compatibility wrapper plausible.
+
+The three missing WebKit symbols are Objective-C DOM classes:
+
+- `_OBJC_CLASS_$_DOMCSSMediaRule`
+- `_OBJC_CLASS_$_DOMDocument`
+- `_OBJC_CLASS_$_DOMElement`
+
+The three missing DataDetectorsCore symbols are C functions:
+
+- `_DDResultGetQueryRangeForURLification`
+- `_DDResultIsPastDate`
+- `_DDScannerCopyResultsCheckOverlap`
+
+Lion `PhoneNumbers.framework` is present in the extracted Lion system and its measured dependencies are fully satisfied by Snow Leopard:
+
+- CoreFoundation: 39 imports, **0 missing**
+- libicucore: 8 imports, **0 missing**
+- libSystem: 24 imports, **0 missing**
+
+Therefore PhoneNumbers can likely be bundled intact, while WebKit and DataDetectorsCore should be evaluated as local Lion candidates before writing compatibility shims.
