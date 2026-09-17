@@ -48,7 +48,13 @@ NSInteger OppositeRole(NSInteger role)
     return role;
 }
 
-NSString *NSStringDescriptionForIMAVChatParticipantState(NSInteger state)
+/*
+ * The Lion binary imports the Mach-O symbol
+ * __NSStringDescriptionForIMAVChatParticipantState. Mach-O prefixes C symbol
+ * names with an underscore, so the source-level function itself must begin
+ * with '_' to produce that exact exported symbol.
+ */
+NSString *_NSStringDescriptionForIMAVChatParticipantState(NSInteger state)
 {
     return [NSString stringWithFormat:@"IMAVChatParticipantState(%ld)", (long)state];
 }
