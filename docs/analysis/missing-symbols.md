@@ -273,3 +273,21 @@ The Lion messaging-island AddressBook dependency surface contains 40 unique impo
 `AddressBookCompat` re-exports Snow Leopard AddressBook and adds the 13 Lion-era instant-message constants using values extracted directly from Lion AddressBook 1090 CFString objects.
 
 This confirms that Lion AddressBook itself does not need to be bundled for Milestone 1.
+
+
+## Local Lion messaging island staging verified
+
+The staged local Lion messaging island inside the test iChat bundle now has the expected internal linkage:
+
+- IMCore -> local AddressBookCompat
+- IMCore -> local PhoneNumbers
+- IMCore -> local nested IMFoundation
+- InstantMessage -> local AddressBookCompat
+- InstantMessage -> local IMCore
+- IMRenderingFoundation -> local IMCore
+- IMRenderingFoundation -> local InstantMessage
+- IMRenderingFoundation -> local DataDetectorsCore
+- IMRenderingFoundation -> Snow Leopard WebKit
+- IMFoundation -> local SecurityCompat
+
+This is the desired Milestone 1 topology. The next validation step is a bundle-wide scan for any remaining references to Snow IMCore / InstantMessage / PhoneNumbers / DataDetectorsCore before another launch attempt.
