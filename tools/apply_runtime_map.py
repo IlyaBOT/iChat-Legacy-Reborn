@@ -26,10 +26,10 @@ def run(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 def expand(value: str, vars: dict[str, str]) -> str:
-    out = os.path.expandvars(os.path.expanduser(value))
+    out = os.path.expanduser(value)
     for k, v in vars.items():
         out = out.replace("${" + k + "}", v)
-    return out
+    return os.path.expandvars(out)
 
 
 def is_macho(path: str) -> bool:
