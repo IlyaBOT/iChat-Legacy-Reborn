@@ -1,0 +1,134 @@
+{
+  "copy": [],
+  "patches": [
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/PlugIns/**",
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/IMCore",
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/InstantMessage",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation",
+        "${APP}/Contents/Frameworks/IMServicePlugIn.framework/Versions/A/Frameworks/IMServicePlugInSupport.framework/Versions/A/IMServicePlugInSupport",
+        "${APP}/Contents/Frameworks/IMAVCore.framework/Versions/A/IMAVCore"
+      ],
+      "from": [
+        "/System/Library/PrivateFrameworks/IMCore.framework/Versions/A/IMCore",
+        "/System/Library/Frameworks/IMCore.framework/Versions/A/IMCore"
+      ],
+      "to": "@executable_path/../Frameworks/IMCore.framework/Versions/A/IMCore"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/PlugIns/**",
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/IMCore",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/InstantMessage",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation",
+        "${APP}/Contents/Frameworks/IMServicePlugIn.framework/Versions/A/Frameworks/IMServicePlugInSupport.framework/Versions/A/IMServicePlugInSupport"
+      ],
+      "from": [
+        "/System/Library/PrivateFrameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation",
+        "/System/Library/Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation",
+        "/System/Library/Frameworks/IMCore.framework/Frameworks/IMFoundation.framework/Versions/A/IMFoundation"
+      ],
+      "to": "@executable_path/../Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/PlugIns/**",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+      ],
+      "from": [
+        "/System/Library/Frameworks/InstantMessage.framework/Versions/A/InstantMessage"
+      ],
+      "to": "@executable_path/../Frameworks/InstantMessage.framework/Versions/A/InstantMessage"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/PlugIns/**"
+      ],
+      "from": [
+        "/System/Library/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation",
+        "/System/Library/Frameworks/InstantMessage.framework/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+      ],
+      "to": "@executable_path/../Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+      ],
+      "from": [
+        "/System/Library/PrivateFrameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore"
+      ],
+      "to": "@executable_path/../Frameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/IMCore"
+      ],
+      "from": [
+        "/System/Library/PrivateFrameworks/PhoneNumbers.framework/Versions/A/PhoneNumbers"
+      ],
+      "to": "@executable_path/../Frameworks/PhoneNumbers.framework/Versions/A/PhoneNumbers"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/IMCore",
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/InstantMessage"
+      ],
+      "from": [
+        "/System/Library/Frameworks/AddressBook.framework/Versions/A/AddressBook"
+      ],
+      "to": "@executable_path/../Frameworks/AddressBookCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation"
+      ],
+      "from": [
+        "/System/Library/Frameworks/Security.framework/Versions/A/Security"
+      ],
+      "to": "@executable_path/../Frameworks/SecurityCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+      ],
+      "from": [
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+      ],
+      "to": "@executable_path/../Frameworks/FoundationCompat.dylib"
+    }
+  ],
+  "ids": [
+    {
+      "path": "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/IMCore",
+      "id": "@executable_path/../Frameworks/IMCore.framework/Versions/A/IMCore"
+    },
+    {
+      "path": "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation",
+      "id": "@executable_path/../Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation"
+    },
+    {
+      "path": "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/InstantMessage",
+      "id": "@executable_path/../Frameworks/InstantMessage.framework/Versions/A/InstantMessage"
+    },
+    {
+      "path": "${APP}/Contents/Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation",
+      "id": "@executable_path/../Frameworks/InstantMessage.framework/Versions/A/Frameworks/IMRenderingFoundation.framework/Versions/A/IMRenderingFoundation"
+    },
+    {
+      "path": "${APP}/Contents/Frameworks/PhoneNumbers.framework/Versions/A/PhoneNumbers",
+      "id": "@executable_path/../Frameworks/PhoneNumbers.framework/Versions/A/PhoneNumbers"
+    },
+    {
+      "path": "${APP}/Contents/Frameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore",
+      "id": "@executable_path/../Frameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore"
+    }
+  ]
+}
