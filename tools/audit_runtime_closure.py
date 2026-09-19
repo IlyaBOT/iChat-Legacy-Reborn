@@ -232,12 +232,23 @@ def aliases_for_install_name(name: str) -> set[str]:
     aliases: set[str] = set()
     base = os.path.basename(name)
     aliases.add(base)
+
+    frameworks = FRAMEWORK_RE.findall(name)
+    if frameworks:
+        # nm's "(from X)" label refers to the provider image itself. For
+        # nested frameworks, only the leaf framework is the provider; adding
+        # every ancestor caused InstantMessage to alias IMRenderingFoundation.
+        aliases.add(frameworks[-1])
+
     if base.endswith(".dylib"):
         aliases.add(base[:-6])
-    if base.startswith("lib") and ".dylib" in base:
-        aliases.add(base[3:].split(".dylib")[0])
-    frameworks = FRAMEWORK_RE.findall(name)
-    aliases.update(frameworks)
+        # nm labels versioned system dylibs as libSystem, libobjc, libicucore,
+        # libstdc++, etc., while install names may be libSystem.B.dylib,
+        # libobjc.A.dylib or libstdc++.6.dylib.
+        m = re.match(r"^(lib[^.]+)(?:\..*)?\.dylib$", base)
+        if m:
+            aliases.add(m.group(1))
+
     return {a for a in aliases if a}
 
 
@@ -257,9 +268,16 @@ def classify(symbol: str) -> str:
 
 def logical_family(path: str) -> str | None:
     fs = FRAMEWORK_RE.findall(path)
-    if fs:
-        return fs[-1]
     base = os.path.basename(path)
+    if fs:
+        leaf = fs[-1]
+        # Count only the actual framework binary as that framework family.
+        # Resource/helper dylibs living inside a framework are separate images.
+        if base == leaf:
+            return leaf
+        if base.endswith(".dylib"):
+            return base
+        return None
     if base.endswith(".dylib"):
         return base
     return None
@@ -277,6 +295,11 @@ def equivalent_lion_path(provider_install_name: str | None, provider_path: str |
 
     if provider_path and provider_path.startswith("/System/"):
         candidates.append(os.path.join(lion_root, provider_path.lstrip("/")))
+
+    if provider_path and "/Contents/Frameworks/" in provider_path:
+        suffix = provider_path.split("/Contents/Frameworks/", 1)[1]
+        candidates.append(os.path.join(lion_root, "System/Library/Frameworks", suffix))
+        candidates.append(os.path.join(lion_root, "System/Library/PrivateFrameworks", suffix))
 
     for c in candidates:
         c = real(c)
