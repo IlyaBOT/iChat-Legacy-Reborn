@@ -233,11 +233,7 @@ def main(argv):
                   (user_name, found_name, value, where))
             rc = 1
         else:
-            try:
-                encoded = text.encode("utf-8")
-                print("%s = %r  [%s]" % (user_name, encoded, how))
-            except Exception:
-                print("%s = %r  [%s]" % (user_name, text, how))
+            print("%s = %r  [%s]" % (user_name, text, how))
 
     return rc
 
