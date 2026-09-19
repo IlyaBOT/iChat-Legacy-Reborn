@@ -105,6 +105,52 @@
         "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
       ],
       "to": "@executable_path/../Frameworks/FoundationCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat"
+      ],
+      "from": [
+        "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit"
+      ],
+      "to": "@executable_path/../Frameworks/AppKitCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat"
+      ],
+      "from": [
+        "/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices"
+      ],
+      "to": "@executable_path/../Frameworks/CoreServicesCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat"
+      ],
+      "from": [
+        "/System/Library/Frameworks/Quartz.framework/Versions/A/Quartz"
+      ],
+      "to": "@executable_path/../Frameworks/QuartzCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat"
+      ],
+      "from": [
+        "/System/Library/PrivateFrameworks/ScreenSharing.framework/Versions/A/ScreenSharing"
+      ],
+      "to": "@executable_path/../Frameworks/ScreenSharingCompat.dylib"
+    },
+    {
+      "targets": [
+        "${APP}/Contents/MacOS/iChat",
+        "${APP}/Contents/Frameworks/IMCore.framework/Versions/A/Frameworks/IMFoundation.framework/Versions/A/IMFoundation"
+      ],
+      "from": [
+        "/usr/lib/libSystem.B.dylib"
+      ],
+      "to": "@executable_path/../Frameworks/LibSystemCompat.dylib"
     }
   ],
   "ids": [
