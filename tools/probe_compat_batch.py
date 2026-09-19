@@ -88,8 +88,9 @@ def class_block(path: str, cls: str) -> str:
     lines=p.stdout.splitlines()
     needle=CLASS_PREFIX+cls
     start=None
+    exact=re.compile(r"^[0-9a-fA-F]+\s+0x[0-9a-fA-F]+\s+"+re.escape(needle)+r"$")
     for i,line in enumerate(lines):
-        if needle in line and re.match(r"^[0-9a-fA-F]+\s+",line.strip()):
+        if exact.match(line.strip()):
             start=i
             break
     if start is None:
@@ -211,11 +212,15 @@ def macho_aliases(name: str) -> set[str]:
     base=os.path.basename(name)
     out={base}
     fs=re.findall(r"/([^/]+)\.framework(?:/|$)",name)
-    if fs: out.add(fs[-1])
+    if fs:
+        out.add(fs[-1])
     if base.endswith(".dylib"):
-        out.add(base[:-6])
-        m=re.match(r"^(lib[^.]+)(?:\..*)?\.dylib$",base)
-        if m: out.add(m.group(1))
+        stem=base[:-6]
+        out.add(stem)
+        parts=stem.split(".")
+        if parts and parts[0].startswith("lib"):
+            for i in range(1,len(parts)+1):
+                out.add(".".join(parts[:i]))
     return {x for x in out if x}
 
 def cfstring_probe(extractor: Path, image: str, symbols: list[str]) -> str:
