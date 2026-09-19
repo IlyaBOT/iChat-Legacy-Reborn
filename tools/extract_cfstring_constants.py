@@ -27,7 +27,10 @@ def cstr(data, off):
     end = data.find(b"\x00", off)
     if end < 0:
         end = len(data)
-    return data[off:end]
+    raw = data[off:end]
+    if isinstance(raw, bytes):
+        return raw.decode("utf-8", "replace")
+    return raw
 
 
 def select_x86_64(blob):
