@@ -50,8 +50,8 @@ def main() -> int:
     build=batch/"build"
     generated=build/"generated"
 
-    run([sys.executable,str(repo/"tools/generate_batch_constants.py"),"--lion-root",str(lion),"--output-dir",str(generated)])
     run(["make","clean"],cwd=str(batch))
+    run([sys.executable,str(repo/"tools/generate_batch_constants.py"),"--lion-root",str(lion),"--output-dir",str(generated)])
     run(["make",f"CC={args.cc}",f"GENERATED_DIR={generated}",f"BUILD_DIR={build}"],cwd=str(batch))
 
     fw=app/"Contents/Frameworks"
