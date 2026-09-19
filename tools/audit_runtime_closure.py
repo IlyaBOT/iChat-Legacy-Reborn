@@ -417,7 +417,11 @@ def audit(executable: str, app_root: str, lion_root: str | None) -> Audit:
         fam = logical_family(path)
         if fam:
             families[fam].add(path)
-    duplicates = {k: sorted(v) for k, v in families.items() if len(v) > 1}
+    duplicates = {
+        k: sorted(v)
+        for k, v in families.items()
+        if len(v) > 1 and any(p == app_root or p.startswith(app_root + os.sep) for p in v)
+    }
 
     return Audit(
         executable=real(executable),
