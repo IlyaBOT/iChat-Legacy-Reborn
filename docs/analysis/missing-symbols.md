@@ -291,3 +291,27 @@ The staged local Lion messaging island inside the test iChat bundle now has the 
 - IMFoundation -> local SecurityCompat
 
 This is the desired Milestone 1 topology. The next validation step is a bundle-wide scan for any remaining references to Snow IMCore / InstantMessage / PhoneNumbers / DataDetectorsCore before another launch attempt.
+
+
+## First launch with local Lion messaging island
+
+After patching the in-process iChat modules to use the local Lion messaging island, the iChat GUI process successfully loaded the local copies of:
+
+- IMCore 800
+- IMFoundation 800
+- InstantMessage 800
+- IMRenderingFoundation 800
+- PhoneNumbers 47
+- DataDetectorsCore 179.4
+- AddressBookCompat
+- SecurityCompat
+
+The previous direct iChat -> Snow IMCore failure on `_ABIMHandlesChangedNotification` disappeared, confirming that the local Lion IMCore path is active.
+
+The next observed loader failure is:
+
+- `_OBJC_CLASS_$_NSFileWrapper`
+- referenced from Lion IMRenderingFoundation
+- expected from Snow Leopard Foundation
+
+This is now the primary launch blocker. The same run also showed that Snow Leopard DataDetectorsCore can still enter the process through another system-framework path even though the local Lion DataDetectorsCore is loaded; that duplicate will be analyzed separately after the current Foundation ABI blocker.
