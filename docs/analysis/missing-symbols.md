@@ -315,3 +315,26 @@ The next observed loader failure is:
 - expected from Snow Leopard Foundation
 
 This is now the primary launch blocker. The same run also showed that Snow Leopard DataDetectorsCore can still enter the process through another system-framework path even though the local Lion DataDetectorsCore is loaded; that duplicate will be analyzed separately after the current Foundation ABI blocker.
+
+
+## Batch runtime audit: 25 remaining static ABI gaps
+
+The corrected runtime-closure audit reports 25 real missing symbols with zero unresolved libraries and zero unmapped two-level origins.
+
+Groups:
+- libSystem: 3 symbols (bootstrap_check_in3, bootstrap_look_up3, strnlen)
+- AppKit: 8 symbols
+- CoreServices: 2 symbols
+- Quartz: 2 symbols
+- ScreenSharing: 10 symbols
+
+The earlier InstantMessage/IMRenderingFoundation gap group was a provider-aliasing false positive and is resolved in the auditor.
+
+Strategy:
+- Keep Snow system frameworks as the base providers.
+- Add narrow re-export compatibility dylibs for AppKit, CoreServices, Quartz, ScreenSharing and libSystem.
+- Generate exact Lion string-constant values at build time from the user's extracted Lion binaries.
+- Apply the wrappers through the declarative Milestone-1 runtime map.
+- Re-run the full closure audit before launching iChat.
+
+Whole Lion AppKit is explicitly rejected: its downstream Snow dependency audit exposes hundreds of additional ABI gaps. BatchCompat therefore implements only the observed launch surface.
