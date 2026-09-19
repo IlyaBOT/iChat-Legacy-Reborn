@@ -28,7 +28,7 @@ def run(*args: str) -> subprocess.CompletedProcess[str]:
 def expand(value: str, vars: dict[str, str]) -> str:
     out = os.path.expandvars(os.path.expanduser(value))
     for k, v in vars.items():
-        out = out.replace(" + k + ", v)
+        out = out.replace("${" + k + "}", v)
     return out
 
 
