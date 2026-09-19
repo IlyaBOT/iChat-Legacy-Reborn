@@ -24,7 +24,7 @@ def u32be(data, off):
 
 
 def cstr(data, off):
-    end = data.find("\x00", off)
+    end = data.find(b"\x00", off)
     if end < 0:
         end = len(data)
     return data[off:end]
@@ -68,8 +68,8 @@ def parse_macho64(data):
             soff = cmdoff + 72
             for _j in range(nsects):
                 raw = struct.unpack_from("<16s16sQQIIIIIIII", data, soff)
-                sectname = raw[0].split("\x00", 1)[0]
-                segname = raw[1].split("\x00", 1)[0]
+                sectname = raw[0].split(b"\x00", 1)[0].decode("ascii", "replace")
+                segname = raw[1].split(b"\x00", 1)[0].decode("ascii", "replace")
                 addr = raw[2]
                 size = raw[3]
                 fileoff = raw[4]
@@ -126,7 +126,7 @@ def read_c_string(data, sections, vmaddr, max_len=4096):
     off, sec = vm_to_file(sections, vmaddr)
     if off is None:
         return None
-    end = data.find("\x00", off, min(len(data), off + max_len))
+    end = data.find(b"\x00", off, min(len(data), off + max_len))
     if end < 0:
         return None
     return decode_bytes(data[off:end])
