@@ -273,7 +273,7 @@ def main() -> int:
             emit(f"      exporter: {exporter}")
             if line: emit(f"      nm: {line}")
 
-        emit("\n  === WHOLE LION PROVIDER -> SNOW DEPENDENCY AUDIT ===")
+        emit("\n  === UMBRELLA LION PROVIDER -> SNOW DEPENDENCY AUDIT ===")
         compat=dependency_compat(macho,lion_provider)
         emit(f"  needed={compat['needed']} missing={compat['missing']} unresolved_deps={compat['unresolved_dependencies']} bundle_candidate={compat['bundle_candidate']}")
         for problem in compat["problems"]:
@@ -282,6 +282,21 @@ def main() -> int:
                 emit(f"      {s}")
             if len(problem["missing"])>80:
                 emit(f"      ... {len(problem['missing'])-80} more")
+
+        exporters=sorted({direct_exporter(macho,lion_provider,s,lion_root) for s in symbols})
+        exporters=[x for x in exporters if x]
+        if exporters:
+            emit("\n  === DIRECT EXPORTER -> SNOW DEPENDENCY AUDIT ===")
+            for exporter in exporters:
+                excompat=dependency_compat(macho,exporter)
+                emit(f"  -- {exporter}")
+                emit(f"     needed={excompat['needed']} missing={excompat['missing']} unresolved_deps={excompat['unresolved_dependencies']} bundle_candidate={excompat['bundle_candidate']}")
+                for problem in excompat["problems"]:
+                    emit(f"       {problem['origin']}: {problem['status']} missing={len(problem['missing'])}")
+                    for s in problem["missing"][:40]:
+                        emit(f"         {s}")
+                    if len(problem["missing"])>40:
+                        emit(f"         ... {len(problem['missing'])-40} more")
 
         classes=sorted({s[len(CLASS_PREFIX):] for s in symbols if s.startswith(CLASS_PREFIX)})
         if classes:
