@@ -338,3 +338,20 @@ Strategy:
 - Re-run the full closure audit before launching iChat.
 
 Whole Lion AppKit is explicitly rejected: its downstream Snow dependency audit exposes hundreds of additional ABI gaps. BatchCompat therefore implements only the observed launch surface.
+
+
+## Milestone: static ABI closure clean
+
+After installing BatchCompat, the full in-process runtime closure reports:
+
+- unresolved_libraries = 0
+- missing_symbols = 0
+- unmapped_origins = 0
+
+The remaining failure is a runtime SIGABRT after all compatibility dylibs are loaded.
+
+Observed duplicate ObjC registrations during the aborting launch:
+- NSFileWrapper: FoundationCompat vs Snow AppKit
+- DataDetectorsCore classes: local Lion DataDetectorsCore vs system Snow DataDetectorsCore
+
+At this point dyld/static symbol resolution is no longer the primary blocker. Runtime debugging should use tools/diagnose_runtime_abort.sh to capture a gdb backtrace, duplicate-class diagnostics and recent CrashReporter output before changing additional ABI mappings.
