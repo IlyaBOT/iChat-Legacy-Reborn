@@ -355,3 +355,18 @@ Observed duplicate ObjC registrations during the aborting launch:
 - DataDetectorsCore classes: local Lion DataDetectorsCore vs system Snow DataDetectorsCore
 
 At this point dyld/static symbol resolution is no longer the primary blocker. Runtime debugging should use tools/diagnose_runtime_abort.sh to capture a gdb backtrace, duplicate-class diagnostics and recent CrashReporter output before changing additional ABI mappings.
+
+
+## Runtime diagnostics: process now survives startup
+
+The runtime diagnostics pass at 21:05 showed the normal direct iChat launch still alive after 3 seconds; the diagnostic script then terminated it deliberately to continue its checks.
+
+The CrashReporter entry displayed by the same script was an older report from 15:28 and therefore did not represent the current launch. That older abort occurred in HIServices _RegisterApplication during NSApplication initialization.
+
+Current state:
+- static runtime closure clean;
+- all BatchCompat dylibs load;
+- direct iChat process survives at least the initial 3-second startup smoke window;
+- remaining duplicate ObjC registrations are DataDetectorsCore (Lion local + Snow system) and NSFileWrapper (FoundationCompat + Snow AppKit).
+
+Next validation should use LaunchServices (open) and an actual GUI/window smoke test rather than another dyld-symbol pass.
