@@ -370,3 +370,15 @@ Current state:
 - remaining duplicate ObjC registrations are DataDetectorsCore (Lion local + Snow system) and NSFileWrapper (FoundationCompat + Snow AppKit).
 
 Next validation should use LaunchServices (open) and an actual GUI/window smoke test rather than another dyld-symbol pass.
+
+
+## GUI-stage correction
+
+The first runtime smoke test established that the iChat process survives initial startup, but it did not establish that an Aqua window is created. A later user-visible test showed no iChat window on the desktop.
+
+Therefore the current milestone state is:
+- static ABI closure clean;
+- process survives startup;
+- GUI/window creation not yet confirmed.
+
+Use tools/diagnose_gui_stage.sh to distinguish LaunchServices/Aqua registration, a hidden/background NSApplication state, and a main-thread stall after NSApplication initialization.
