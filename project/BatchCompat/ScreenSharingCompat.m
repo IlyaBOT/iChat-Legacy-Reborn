@@ -1,11 +1,6 @@
 #import <AppKit/AppKit.h>
 #include <stdio.h>
 
-/* Base classes exist in Snow Leopard ScreenSharing; declarations only. */
-@interface SSCredentials : NSObject @end
-@interface SSInputEvent : NSObject @end
-@interface SSAddress : NSObject @end
-
 @interface SSConnectionOptions : NSObject @end
 @implementation SSConnectionOptions
 - (id)init { return [super init]; }
@@ -23,7 +18,9 @@
 - (void)setVideoEncodings:(NSArray *)v { (void)v; }
 @end
 
-@interface SSEncryptionKeyCredentials : SSCredentials @end
+@interface SSEncryptionKeyCredentials : NSObject
+- (id)initWithAuthenticationType:(id)type withEncryptionKey:(NSData *)key;
+@end
 @implementation SSEncryptionKeyCredentials
 + (id)preauthorizedCredentialsWithKey:(NSData *)key { return [[[self alloc] initWithAuthenticationType:nil withEncryptionKey:key] autorelease]; }
 - (id)initWithAuthenticationType:(id)type withEncryptionKey:(NSData *)key { (void)type; (void)key; return [super init]; }
@@ -42,7 +39,9 @@
 - (BOOL)acceptsFirstMouse:(NSEvent *)event { (void)event; return YES; }
 @end
 
-@interface SSKeyboardEvent : SSInputEvent @end
+@interface SSKeyboardEvent : NSObject
+- (id)initWithKeyCode:(NSUInteger)code withState:(int)state;
+@end
 @implementation SSKeyboardEvent
 + (id)keyboardEventWithKeyCode:(NSUInteger)code withState:(int)state { return [[[self alloc] initWithKeyCode:code withState:state] autorelease]; }
 - (id)initWithKeyCode:(NSUInteger)code withState:(int)state { (void)code; (void)state; return [super init]; }
@@ -64,7 +63,9 @@
 - (id)frameBuffer { return nil; }
 @end
 
-@interface SSUDPSocketAddress : SSAddress @end
+@interface SSUDPSocketAddress : NSObject
+- (id)initWithUDPSocket:(int)sock;
+@end
 @implementation SSUDPSocketAddress
 - (id)initWithUDPSocket:(int)sock { (void)sock; return [super init]; }
 - (int)socket { return -1; }
